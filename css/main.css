@@ -1,0 +1,58 @@
+body {
+    /* height: 80vh;
+    margin: 40px;
+    display: grid;
+   /* grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    justify-content: space-around;
+    text-align:center; */
+
+    height: 100vh;
+  
+  }
+
+.containerdiv {
+    display: block;
+    margin: 100px;
+    width: 72%;
+  } 
+
+  .buttonimage {
+    width: 115px;
+    position: relative;
+    top: 225px;
+   } 
+
+   table, td {
+    border: 1px solid black;
+  }
+
+ 
+
+  td {
+    height: 20px;
+    width: 20px;
+    }
+
+    .dropbtn {
+        background-color: #5d5fd6;
+        color: white;
+        padding: 10px;
+        font-size: 15px;
+        border: none;
+        cursor: pointer;
+      }
+      
+     
+      
+
+  
+
+
+   /* html { 
+    background: url(../images/mine.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  } */
