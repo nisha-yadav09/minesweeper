@@ -23,8 +23,8 @@ let flagCount = null;
 
 /*----- event listeners -----*/
 
-//document.querySelector()
-
+document.querySelector("#table-div").addEventListener("click", handleCellClick);
+document.querySelector("#table-div").addEventListener("contextmenu", handleCellRightClick);
 //const difficultyDropboxEl = document. 
 
 /*----- functions -----*/
@@ -85,3 +85,18 @@ function fillBoardWithRandomMines(boardChoice) {
     } while (tempMineChoice>=1);
 }
 
+function handleCellClick(evt) {
+    if (evt.target.tagName !== 'TD') return;
+    let cellXIndex = parseInt(evt.target.getAttribute("x-index"));
+    let cellYIndex = parseInt(evt.target.getAttribute("y-index"));
+    if (arrBoard[cellXIndex][cellYIndex].value === "mine" ) evt.target.innerHTML="<img src='images/bomb.png'/>";
+}
+
+function handleCellRightClick(evt) {
+    if (evt.target.tagName !== 'TD') return;
+    evt.preventDefault();
+    let cellXIndex = parseInt(evt.target.getAttribute("x-index"));
+    let cellYIndex = parseInt(evt.target.getAttribute("y-index"));
+    arrBoard[cellXIndex][cellYIndex].hasFlag = true;
+    evt.target.innerHTML="<img src='images/flag.png'/>";
+}
