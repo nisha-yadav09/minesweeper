@@ -34,6 +34,7 @@ function init() {
     createBoard(boardChoice);
     createArray(boardChoice);
     fillBoardWithRandomMines(boardChoice);
+    fillBoardWithNumbers();
      
 }
 
@@ -89,7 +90,8 @@ function handleCellClick(evt) {
     if (evt.target.tagName !== 'TD') return;
     let cellXIndex = parseInt(evt.target.getAttribute("x-index"));
     let cellYIndex = parseInt(evt.target.getAttribute("y-index"));
-    if (arrBoard[cellXIndex][cellYIndex].value === "mine" ) evt.target.innerHTML="<img src='images/bomb.png'/>";
+    if (arrBoard[cellXIndex][cellYIndex].value === "mine" ) evt.target.innerHTML = "<img src='images/bomb.png'/>";
+    if (typeof(arrBoard[cellXIndex][cellYIndex].value) === "number" ) evt.target.innerHTML = arrBoard[cellXIndex][cellYIndex].value;
 }
 
 function handleCellRightClick(evt) {
@@ -99,4 +101,35 @@ function handleCellRightClick(evt) {
     let cellYIndex = parseInt(evt.target.getAttribute("y-index"));
     arrBoard[cellXIndex][cellYIndex].hasFlag = true;
     evt.target.innerHTML="<img src='images/flag.png'/>";
+}
+
+function fillBoardWithNumbers(){
+    let counter = 0;
+    for(let i = 0; i < arrBoard.length; i++) {
+        for(let j = 0; j < arrBoard.length; j++) {
+            if (arrBoard[i][j].value === "") {
+                let xLowerLimit = i-1;
+                xLowerLimit = xLowerLimit < 0 ? 0 : xLowerLimit;
+                xLowerLimit = xLowerLimit > arrBoard.length-1 ? arrBoard.length-1 : xLowerLimit;
+                let yLowerLimit = j-1;
+                yLowerLimit = yLowerLimit < 0 ? 0 : yLowerLimit;
+                yLowerLimit = yLowerLimit > arrBoard.length-1  ? arrBoard.length-1  : yLowerLimit;
+                let xUpperLimit = (i-1)+2;
+                xUpperLimit = xUpperLimit < 0 ? 0 : xUpperLimit;
+                xUpperLimit = xUpperLimit > arrBoard.length-1  ? arrBoard.length-1  : xUpperLimit;
+                let yUpperLimit = (j-1)+2;
+                yUpperLimit = yUpperLimit < 0 ? 0 : yUpperLimit;
+                yUpperLimit = yUpperLimit > arrBoard.length-1  ? arrBoard.length-1  : yUpperLimit;
+                for (let itrI = xLowerLimit; itrI <= xUpperLimit; itrI++) {
+                    for (let itrJ = yLowerLimit; itrJ <= yUpperLimit; itrJ++) {
+                        if (arrBoard[itrI][itrJ].value === "mine") {
+                            counter++;
+                        }
+                    }
+                }
+                arrBoard[i][j].value = arrBoard[i][j].value === "mine" ?"mine" : counter;
+                counter = 0;
+            }
+        }
+    }
 }
