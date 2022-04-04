@@ -10,20 +10,20 @@ body {
 
 table {
   background-color: #2b5246;
-  width: fit-content;
-  block-size: fit-content;
+  table-layout: fixed;
+  width: 400px; 
+  height: 400px;
 }
 
 td {
   border: 1px solid #90fa8773;
   background-color: #90fa8773;
-  height: 20px;
-  width: 20px;
   border-radius: 20%;
   border-style: ridge;
   text-align: center;
   color: #5d5fd6;
   font-weight: bold;
+  height: 20px;
 }
 
 .dropbtn {
@@ -62,6 +62,8 @@ img {
   position: fixed;
   top: 50%;
   left: 50%;
+  max-width: 600px;
+  max-height: 500px;
   transform: translate(-50%, -50%) scale(0);
   transition: 200ms ease-in-out;
   border-radius: 20px;
