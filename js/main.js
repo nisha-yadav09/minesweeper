@@ -6,7 +6,7 @@ const boardSize = {
     expert:"24"
 };
 const mines = {
-    beginner :10, 
+    beginner : 10, 
     intermediate: 40,
     expert:99
 };
@@ -34,8 +34,7 @@ function init() {
     createBoard(boardChoice);
     createArray(boardChoice);
     fillBoardWithRandomMines(boardChoice);
-    fillBoardWithNumbers();
-     
+    fillBoardWithNumbers(); 
 }
 
 function createBoard(boardChoice) {
@@ -91,7 +90,8 @@ function handleCellClick(evt) {
     let cellXIndex = parseInt(evt.target.getAttribute("x-index"));
     let cellYIndex = parseInt(evt.target.getAttribute("y-index"));
     if (arrBoard[cellXIndex][cellYIndex].value === "mine" ) evt.target.innerHTML = "<img src='images/bomb.png'/>";
-    if (typeof(arrBoard[cellXIndex][cellYIndex].value) === "number" ) evt.target.innerHTML = arrBoard[cellXIndex][cellYIndex].value;
+    if (typeof(arrBoard[cellXIndex][cellYIndex].value) === "number" && arrBoard[cellXIndex][cellYIndex].value !== 0) evt.target.innerHTML = arrBoard[cellXIndex][cellYIndex].value;
+    if (arrBoard[cellXIndex][cellYIndex].value === 0 ) showAllVacantCells(evt,cellXIndex,cellYIndex);
 }
 
 function handleCellRightClick(evt) {
@@ -103,7 +103,7 @@ function handleCellRightClick(evt) {
     evt.target.innerHTML="<img src='images/flag.png'/>";
 }
 
-function fillBoardWithNumbers(){
+function fillBoardWithNumbers() {
     let counter = 0;
     for(let i = 0; i < arrBoard.length; i++) {
         for(let j = 0; j < arrBoard.length; j++) {
@@ -132,4 +132,56 @@ function fillBoardWithNumbers(){
             }
         }
     }
+}
+
+function showAllVacantCells(evt,cellXIndex,cellYIndex) {
+    let iNum = 0;
+    let jNum = 0;
+    for (let j = cellYIndex; j < arrBoard.length; j++ ) {
+        if (j === arrBoard.length - 1) {
+            jNum = arrBoard.length - 1;
+        } else if (arrBoard[cellXIndex][j].value !== 0  && arrBoard[cellXIndex][j].value !== "mine")  {
+            jNum = j-1;
+            break;
+        } 
+    } 
+    for (let i = cellXIndex; i < arrBoard.length; i++ ) {
+        if (i === arrBoard.length - 1) {
+            iNum = arrBoard.length - 1;
+        } else if (arrBoard[i][cellYIndex].value !== 0  && arrBoard[i][cellYIndex].value !== "mine") {
+            iNum = i-1;
+            break;
+        }
+    }
+
+    for (let i = cellXIndex; i <= iNum; i++) {
+        for (let j = cellYIndex; j<= jNum; j++) {
+           document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
+        }
+    }
+    //showAllVacantCells1(evt,cellXIndex,cellYIndex);
+}
+
+function showAllVacantCells1(evt,cellXIndex,cellYIndex) {
+    let iNum = 0;
+    let jNum = 0;
+    for (let j = cellYIndex; j >= 0; j-- ) {
+        if (arrBoard[cellXIndex][j].value !== 0  && arrBoard[cellXIndex][j].value !== "mine")  {
+            jNum = j+1;
+            break;
+        } 
+    } 
+    for (let i = cellXIndex; i >= 0 ; i-- ) {
+         if (arrBoard[i][cellYIndex].value !== 0  && arrBoard[i][cellYIndex].value !== "mine") {
+            iNum = i+1;
+            break;
+        }
+    }
+
+    for (let i = iNum; i < cellXIndex; i++) {
+        for (let j = jNum; j< cellYIndex; j++) {
+           document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
+            
+        }
+    } 
 }
