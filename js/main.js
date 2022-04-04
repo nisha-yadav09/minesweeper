@@ -1,33 +1,59 @@
 /*----- constants -----*/
 
 const boardSize = {
-    beginner:"8", 
-    intermediate: "16" ,
-    expert:"24"
+    beginner: 8, 
+    intermediate: 16,
+    expert: 20
 };
+
 const mines = {
     beginner : 10, 
     intermediate: 40,
-    expert:99
+    expert:90
 };
-let boardChoice =  boardSize.beginner;
-let mineChoice =  mines.beginner;
 
+const boardChoice =  boardSize.beginner;
+const mineChoice =  mines.beginner;
 
 /*----- app's state (variables) -----*/
 
 let arrBoard ;
 let flagCount = null;
+
 /*----- cached element references -----*/
 
+const openModalButtons = document.querySelectorAll('[data-modal-target]')
+const closeModalButtons = document.querySelectorAll('[data-close-button]')
+const overlay = document.getElementById('overlay')
 
 /*----- event listeners -----*/
 
+openModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const modal = document.querySelector(button.dataset.modalTarget)
+      openModal(modal)
+    })
+  })
+
+  overlay.addEventListener('click', () => {
+    const modals = document.querySelectorAll('.modal.active')
+    modals.forEach(modal => {
+      closeModal(modal)
+    })
+  })
+  
+  closeModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const modal = button.closest('.modal')
+      closeModal(modal)
+    })
+  })
+
 document.querySelector("#table-div").addEventListener("click", handleCellClick);
 document.querySelector("#table-div").addEventListener("contextmenu", handleCellRightClick);
-//const difficultyDropboxEl = document. 
 
 /*----- functions -----*/
+
 init();
 
 function init() {
@@ -78,10 +104,12 @@ function createArray(boardChoice) {
 function fillBoardWithRandomMines(boardChoice) {
     let tempMineChoice = mineChoice;
     do {
+        tempMineChoice --;
         let xMine = getRandomMinesIndex(boardChoice, "x");
         let yMine = getRandomMinesIndex(boardChoice, "y");
-        arrBoard[xMine][yMine].value = arrBoard[xMine][yMine].value === "mine" ? "" : "mine";
-        arrBoard[xMine][yMine].value === "mine" ? tempMineChoice -- : tempMineChoice;
+        let initVal = arrBoard[xMine][yMine].value;
+        arrBoard[xMine][yMine].value = arrBoard[xMine][yMine].value === "" ? "mine" : "mine";
+        initVal === "mine" ? tempMineChoice ++ : tempMineChoice;
     } while (tempMineChoice>=1);
 }
 
@@ -90,7 +118,10 @@ function handleCellClick(evt) {
     let cellXIndex = parseInt(evt.target.getAttribute("x-index"));
     let cellYIndex = parseInt(evt.target.getAttribute("y-index"));
     if (arrBoard[cellXIndex][cellYIndex].value === "mine" ) evt.target.innerHTML = "<img src='images/bomb.png'/>";
-    if (typeof(arrBoard[cellXIndex][cellYIndex].value) === "number" && arrBoard[cellXIndex][cellYIndex].value !== 0) evt.target.innerHTML = arrBoard[cellXIndex][cellYIndex].value;
+    if (typeof(arrBoard[cellXIndex][cellYIndex].value) === "number" && arrBoard[cellXIndex][cellYIndex].value !== 0) {
+        evt.target.innerHTML = arrBoard[cellXIndex][cellYIndex].value;
+        evt.target.style.backgroundColor = "#bfc7a4";
+    } 
     if (arrBoard[cellXIndex][cellYIndex].value === 0 ) showAllVacantCells(evt,cellXIndex,cellYIndex);
 }
 
@@ -141,7 +172,7 @@ function showAllVacantCells(evt,cellXIndex,cellYIndex) {
         if (j === arrBoard.length - 1) {
             jNum = arrBoard.length - 1;
         } else if (arrBoard[cellXIndex][j].value !== 0  && arrBoard[cellXIndex][j].value !== "mine")  {
-            jNum = j-1;
+            jNum = j;
             break;
         } 
     } 
@@ -149,17 +180,30 @@ function showAllVacantCells(evt,cellXIndex,cellYIndex) {
         if (i === arrBoard.length - 1) {
             iNum = arrBoard.length - 1;
         } else if (arrBoard[i][cellYIndex].value !== 0  && arrBoard[i][cellYIndex].value !== "mine") {
-            iNum = i-1;
+            iNum = i;
             break;
         }
     }
 
     for (let i = cellXIndex; i <= iNum; i++) {
-        for (let j = cellYIndex; j<= jNum; j++) {
+        for (let j = cellYIndex; j<= cellYIndex; j++) {
            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
+           document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).style.background = "#bfc7a4";
         }
     }
-    //showAllVacantCells1(evt,cellXIndex,cellYIndex);
+
+    for (let i = cellXIndex; i <= cellXIndex; i++) {
+        for (let j = cellYIndex; j<= jNum; j++) {
+           document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
+           document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).style.background = "#bfc7a4";
+        }
+    }
+    showAllVacantCells1(evt,cellXIndex,cellYIndex);
+    document.querySelector("#table-div").classList.add("active");
+    setTimeout(function() {
+        document.querySelector("#table-div").classList.remove("active");
+    }, 1200);
+    
 }
 
 function showAllVacantCells1(evt,cellXIndex,cellYIndex) {
@@ -167,21 +211,39 @@ function showAllVacantCells1(evt,cellXIndex,cellYIndex) {
     let jNum = 0;
     for (let j = cellYIndex; j >= 0; j-- ) {
         if (arrBoard[cellXIndex][j].value !== 0  && arrBoard[cellXIndex][j].value !== "mine")  {
-            jNum = j+1;
+            jNum = j;
             break;
         } 
     } 
     for (let i = cellXIndex; i >= 0 ; i-- ) {
          if (arrBoard[i][cellYIndex].value !== 0  && arrBoard[i][cellYIndex].value !== "mine") {
-            iNum = i+1;
+            iNum = i;
             break;
         }
     }
 
     for (let i = iNum; i < cellXIndex; i++) {
-        for (let j = jNum; j< cellYIndex; j++) {
-           document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
-            
+        for (let j = cellYIndex; j<= cellYIndex; j++) {
+            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
+            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).style.background = "#bfc7a4";
         }
     } 
+    for (let i = cellXIndex; i <= cellXIndex; i++) {
+        for (let j = jNum; j< cellYIndex; j++) {
+            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
+            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).style.background = "#bfc7a4";
+        }
+    }
+}
+
+function openModal(modal) {
+    if (modal == null) return
+    modal.classList.add('active')
+    overlay.classList.add('active')
+}
+  
+function closeModal(modal) {
+    if (modal == null) return
+    modal.classList.remove('active')
+    overlay.classList.remove('active')
 }

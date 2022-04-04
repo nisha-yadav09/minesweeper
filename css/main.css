@@ -1,61 +1,130 @@
 body {
-    /* height: 80vh;
-    margin: 40px;
-    display: grid;
-   /* grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    justify-content: space-around;
-    text-align:center; */
-
     height: 100vh;
-  
+}
+
+.buttonimage {
+  width: 115px;
+  position: relative;
+  top: 225px;
+} 
+
+table {
+  background-color: #2b5246;
+  width: fit-content;
+  block-size: fit-content;
+}
+
+td {
+  border: 1px solid #90fa8773;
+  background-color: #90fa8773;
+  height: 20px;
+  width: 20px;
+  border-radius: 20%;
+  border-style: ridge;
+  text-align: center;
+  color: #5d5fd6;
+  font-weight: bold;
+}
+
+.dropbtn {
+  background-color: #90fa8773;
+  box-shadow: 0px 0px 15px #90fa8773;
+  color: black;
+  width: fit-content;
+  block-size: fit-content;
+  font-size: 15px;
+  cursor: pointer;
+  border: 1px solid #90fa8773;
+}
+    
+img {
+  max-width:100%;
+  max-height:100%;
+}
+
+.active {
+  animation: shake 200ms 2 linear;
+}
+    
+@keyframes shake {
+  0% {
+    transform: translate(6px, 0);
   }
-
-.containerdiv {
-    display: block;
-    margin: 100px;
-    width: 72%;
-  } 
-
-  .buttonimage {
-    width: 115px;
-    position: relative;
-    top: 225px;
-   } 
-
-   table, td {
-    border: 1px solid black;
+  50% {
+    transform: translate(-6px, 0);
   }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+    
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 200ms ease-in-out;
+  border-radius: 20px;
+  z-index: 10;
+  background-color: #2b5246;
+  padding: 20px;
+}
+    
+.modal.active {
+  transform: translate(-50%, -50%) scale(1);
+}
 
- 
+.modal-header {
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+    
+.modal-header .title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+    
+.modal-header .close-button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+    
+.modal-body {
+  padding: 10px 15px;
+}
+    
+#overlay {
+  position: fixed;
+  opacity: 0;
+  transition: 200ms ease-in-out; 
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  pointer-events: none;
+}
+    
+#overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
 
-  td {
-    height: 20px;
-    width: 20px;
-    }
 
-    .dropbtn {
-        background-color: #5d5fd6;
-        color: white;
-        padding: 10px;
-        font-size: 15px;
-        border: none;
-        cursor: pointer;
-      }
-      
-     
-      img {
-        max-width:100%;
-        max-height:100%;
-      }
-
-  
-
-
-   /* html { 
-    background: url(../images/mine.jpg) no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-  } */
+/* html { 
+background: url(../images/mine.jpg) no-repeat center center fixed; 
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+-webkit-transition: opacity 1s linear;
+-o-transition: opacity 1s linear;
+-moz-transition: opacity 1s linear;
+transition: opacity 1s linear;
+} */

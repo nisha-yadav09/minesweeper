@@ -9,15 +9,21 @@
     <title>Document</title>
 </head>
 <body>
-    <!-- <main > -->  
-       <!-- <img src="images/play.jpg" alt="" class="buttonimage" >*/ -->
-    <!-- </main> -->
-    <select class="dropbtn">
-        <option value="1" >Beginner</option>
-        <option value="2" >Intermediate</option>
-        <option value="3">Expert</option>
-    </select>
-    <div id="table-div">
+    <div data-modal-target="#modal">  
+       <img src="images/play.jpg" alt="" class="buttonimage" >
     </div>
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <select class="dropbtn">
+                <option value="1" >Beginner</option>
+                <option value="2" >Intermediate</option>
+                <option value="3">Expert</option>
+            </select>
+            <button data-close-button class="close-button">&times;</button>
+        </div>
+        <div id="table-div">
+        </div>
+    </div>
+    <div id="overlay"></div>
 </body>
 </html>
