@@ -1,30 +1,32 @@
 /*----- constants -----*/
 
 const boardSize = {
-    beginner: 8, 
-    intermediate: 16,
-    expert: 20
+    Beginner: 8, 
+    Intermediate: 16,
+    Expert: 24
 };
 
 const mines = {
-    beginner : 10, 
-    intermediate: 40,
-    expert:90
+    Beginner : 10, 
+    Intermediate: 40,
+    Expert:99
 };
-
-const boardChoice =  boardSize.beginner;
-const mineChoice =  mines.beginner;
 
 /*----- app's state (variables) -----*/
 
 let arrBoard ;
 let flagCount = null;
+let boardChoice =  0;
+let mineChoice =  0;
+let gameStatus = 0;
 
 /*----- cached element references -----*/
 
-const openModalButtons = document.querySelectorAll('[data-modal-target]')
-const closeModalButtons = document.querySelectorAll('[data-close-button]')
-const overlay = document.getElementById('overlay')
+const openModalButtons = document.querySelectorAll('[data-modal-target]');
+const closeModalButtons = document.querySelectorAll('[data-close-button]');
+const overlay = document.getElementById('overlay');
+const boardSelected = document.querySelector("select");
+const minesCountToDisplay = document.querySelector(".container > div > span");
 
 /*----- event listeners -----*/
 
@@ -32,31 +34,39 @@ openModalButtons.forEach(button => {
     button.addEventListener('click', () => {
       const modal = document.querySelector(button.dataset.modalTarget)
       openModal(modal)
-    })
-  })
+    });
+  });
 
   overlay.addEventListener('click', () => {
     const modals = document.querySelectorAll('.modal.active')
     modals.forEach(modal => {
       closeModal(modal)
-    })
-  })
+    });
+  });
   
   closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
       const modal = button.closest('.modal')
       closeModal(modal)
-    })
-  })
+    });
+  });
 
+document.querySelector("select").addEventListener('change', function() {
+    let val = document.querySelector("select").value
+    boardChoice =  boardSize[val];
+    mineChoice =  mines[val];
+    minesCountToDisplay.textContent = mineChoice;
+    init();
+});
 document.querySelector("#table-div").addEventListener("click", handleCellClick);
 document.querySelector("#table-div").addEventListener("contextmenu", handleCellRightClick);
 
 /*----- functions -----*/
 
-init();
+//init();
 
 function init() {
+
     createBoard(boardChoice);
     createArray(boardChoice);
     fillBoardWithRandomMines(boardChoice);
@@ -117,12 +127,19 @@ function handleCellClick(evt) {
     if (evt.target.tagName !== 'TD') return;
     let cellXIndex = parseInt(evt.target.getAttribute("x-index"));
     let cellYIndex = parseInt(evt.target.getAttribute("y-index"));
-    if (arrBoard[cellXIndex][cellYIndex].value === "mine" ) evt.target.innerHTML = "<img src='images/bomb.png'/>";
+    if (arrBoard[cellXIndex][cellYIndex].value === "mine" ) {
+        evt.target.innerHTML = "<img src='images/mines.png'/>";
+        revealAllMines();
+    }
     if (typeof(arrBoard[cellXIndex][cellYIndex].value) === "number" && arrBoard[cellXIndex][cellYIndex].value !== 0) {
         evt.target.innerHTML = arrBoard[cellXIndex][cellYIndex].value;
         evt.target.style.backgroundColor = "#bfc7a4";
+        arrBoard[cellXIndex][cellYIndex].reveal = true;
+
     } 
     if (arrBoard[cellXIndex][cellYIndex].value === 0 ) showAllVacantCells(evt,cellXIndex,cellYIndex);
+    mineSweeperStatus();
+
 }
 
 function handleCellRightClick(evt) {
@@ -184,11 +201,11 @@ function showAllVacantCells(evt,cellXIndex,cellYIndex) {
             break;
         }
     }
-
     for (let i = cellXIndex; i <= iNum; i++) {
         for (let j = cellYIndex; j<= cellYIndex; j++) {
            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).style.background = "#bfc7a4";
+           arrBoard[i][j].reveal = true;
         }
     }
 
@@ -196,17 +213,18 @@ function showAllVacantCells(evt,cellXIndex,cellYIndex) {
         for (let j = cellYIndex; j<= jNum; j++) {
            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
            document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).style.background = "#bfc7a4";
+           arrBoard[i][j].reveal = true;
         }
     }
-    showAllVacantCells1(evt,cellXIndex,cellYIndex);
-    document.querySelector("#table-div").classList.add("active");
+    showAllVacantCellsNegativeIndex(evt,cellXIndex,cellYIndex);
+    document.querySelector("#table-div").classList.add("activate");
     setTimeout(function() {
-        document.querySelector("#table-div").classList.remove("active");
+        document.querySelector("#table-div").classList.remove("activate");
     }, 1200);
     
 }
 
-function showAllVacantCells1(evt,cellXIndex,cellYIndex) {
+function showAllVacantCellsNegativeIndex(evt,cellXIndex,cellYIndex) {
     let iNum = 0;
     let jNum = 0;
     for (let j = cellYIndex; j >= 0; j-- ) {
@@ -221,17 +239,18 @@ function showAllVacantCells1(evt,cellXIndex,cellYIndex) {
             break;
         }
     }
-
     for (let i = iNum; i < cellXIndex; i++) {
         for (let j = cellYIndex; j<= cellYIndex; j++) {
             document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
             document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).style.background = "#bfc7a4";
+            arrBoard[i][j].reveal = true;
         }
     } 
     for (let i = cellXIndex; i <= cellXIndex; i++) {
         for (let j = jNum; j< cellYIndex; j++) {
             document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).innerHTML = arrBoard[i][j].value;
             document.querySelector(`[x-index = "${i.toString()}"][y-index = "${j.toString()}"]`).style.background = "#bfc7a4";
+            arrBoard[i][j].reveal = true;
         }
     }
 }
@@ -246,4 +265,36 @@ function closeModal(modal) {
     if (modal == null) return
     modal.classList.remove('active')
     overlay.classList.remove('active')
+        window.location.reload();
+}
+
+function revealAllMines () {
+    for (let i = 0; i < arrBoard.length; i++) {
+        for (let j = 0; j < arrBoard.length; j++) {
+            if (arrBoard[i][j].value === "mine") {
+                document.querySelector(`table [x-index = "${i}"][y-index = "${j}"]`).innerHTML = "<img src='images/mines.png'/>";
+                arrBoard[i][j].reveal = true;
+            }
+        }
+    }
+    gameStatus = -1;
+}
+
+function mineSweeperStatus() {
+    if (gameStatus === -1) {
+        console.log("YOU LOST");
+    }
+    let revealedMineCounter = 0;
+    let nonMineCounter = (arrBoard.length*arrBoard.length) - mineChoice;
+    for (let i = 0; i < arrBoard.length; i++) {
+        for (let j = 0; j < arrBoard.length; j++) {
+            if (arrBoard[i][j].value !== "mine" && arrBoard[i][j].reveal === true) {
+                revealedMineCounter++;
+            }
+        }
+    }
+    revealedMineCounter === nonMineCounter ? gameStatus = 1 : gameStatus = 0;
+    if (gameStatus === 1) {
+        console.log("YOU WIN");
+    }  
 }
