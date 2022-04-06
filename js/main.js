@@ -19,6 +19,8 @@ let flagCount = null;
 let boardChoice =  0;
 let mineChoice =  0;
 let gameStatus = 0;
+let startTime;
+let intervalID;
 
 /*----- cached element references -----*/
 
@@ -26,7 +28,8 @@ const openModalButtons = document.querySelectorAll('[data-modal-target]');
 const closeModalButtons = document.querySelectorAll('[data-close-button]');
 const overlay = document.getElementById('overlay');
 const boardSelected = document.querySelector("select");
-const minesCountToDisplay = document.querySelector(".container > div > span");
+const minesCountToDisplay = document.querySelector(".container > div#mines-div > span");
+const counterToDisplay = document.querySelector(".container > div#counter-div > span");
 
 /*----- event listeners -----*/
 
@@ -66,6 +69,15 @@ document.querySelector("#table-div").addEventListener("contextmenu", handleCellR
 //init();
 
 function init() {
+
+    setStartTime();
+
+    intervalID = setInterval(function () {
+        
+                        counterToDisplay.textContent = getElapsedTime(startTime).toString();
+                    }, 1000);
+
+    
 
     createBoard(boardChoice);
     createArray(boardChoice);
@@ -257,15 +269,15 @@ function showAllVacantCellsNegativeIndex(evt,cellXIndex,cellYIndex) {
 
 function openModal(modal) {
     if (modal == null) return
-    modal.classList.add('active')
-    overlay.classList.add('active')
+    modal.classList.add('active');
+    overlay.classList.add('active');
 }
   
 function closeModal(modal) {
     if (modal == null) return
-    modal.classList.remove('active')
-    overlay.classList.remove('active')
-        window.location.reload();
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
+    window.location.reload();
 }
 
 function revealAllMines () {
@@ -273,6 +285,7 @@ function revealAllMines () {
         for (let j = 0; j < arrBoard.length; j++) {
             if (arrBoard[i][j].value === "mine") {
                 document.querySelector(`table [x-index = "${i}"][y-index = "${j}"]`).innerHTML = "<img src='images/mines.png'/>";
+                document.querySelector("#table-div").classList.add("activate");
                 arrBoard[i][j].reveal = true;
             }
         }
@@ -282,7 +295,9 @@ function revealAllMines () {
 
 function mineSweeperStatus() {
     if (gameStatus === -1) {
-        console.log("YOU LOST");
+        stopWatch();
+        document.querySelector('#status-div').innerHTML = "TRY AGAIN!!";
+        document.querySelector("#table-div").style.pointerEvents = "none";
     }
     let revealedMineCounter = 0;
     let nonMineCounter = (arrBoard.length*arrBoard.length) - mineChoice;
@@ -295,6 +310,38 @@ function mineSweeperStatus() {
     }
     revealedMineCounter === nonMineCounter ? gameStatus = 1 : gameStatus = 0;
     if (gameStatus === 1) {
-        console.log("YOU WIN");
+        stopWatch();
+        document.querySelector('#status-div').innerHTML = "BRAVO! YOU WIN!!";
+        document.querySelector("#table-div").style.pointerEvents = "none";
     }  
+}
+
+function setStartTime() {
+    startTime = new Date();
+}
+
+function getElapsedTime (startTime) {
+    let endTime = new Date();
+    let timeDiff = endTime.getTime() - startTime.getTime();
+    timeDiff = timeDiff / 1000;
+    let seconds = Math.floor(timeDiff % 60);
+    let secondsAsString = seconds < 10 ? "0" + seconds : seconds + "";
+    timeDiff = Math.floor(timeDiff / 60);
+    let minutes = timeDiff % 60;
+    let minutesAsString = minutes < 10 ? "0" + minutes : minutes + "";
+    timeDiff = Math.floor(timeDiff / 60);
+    let hours = timeDiff % 24;
+    timeDiff = Math.floor(timeDiff / 24);
+    let days = timeDiff;
+    let totalHours = hours + (days * 24);
+    let totalHoursAsString = totalHours < 10 ? "0" + totalHours : totalHours + "";
+    if (totalHoursAsString === "00") {
+        return minutesAsString + ":" + secondsAsString;
+    } else {
+        return totalHoursAsString + ":" + minutesAsString + ":" + secondsAsString;
+    }
+}
+
+function stopWatch() {
+    clearInterval(intervalID);
 }

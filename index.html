@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hurricane&family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet" type="text/css" />
     <script defer src="js/main.js"></script>
-    <title>Document</title>
+    <title>MINESWEEPER</title>
 </head>
 <body>
     <h2>Minesweeper</h2>
-     
-       <!-- <img src="images/play.jpg" alt="" class="buttonimage" > -->
        <div>
         <select class="dropbtn">
             <option value="Beginner" >Difficulty</option>
@@ -26,13 +27,13 @@
     </div>
     <div class="modal" id="modal">
         <div class="container">
-            <div><img src="images/mines.png" alt="" class="buttonimage"> <span>blah</span></div>
-            <div><img src="images/clock.png" alt="" class="buttonimage" > blah </div>
+            <div id="mines-div"><img src="images/mines.png" alt="" class="buttonimage"> <span> 0 </span></div>
+            <div id="status-div"> <span>  </span></div>
+            <div id="counter-div"><img src="images/clock.png" alt="" class="buttonimage" > <span>00:00</span> </div>
         </div>
         <div id="table-div">
         </div>
     </div>
     <div id="overlay"></div>
-    <div id="game-status"></div>
 </body>
 </html>

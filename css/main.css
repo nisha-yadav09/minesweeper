@@ -150,6 +150,19 @@ h2 {
   font-size: 36px;
 }
 
+#status-div {
+  animation: blinker 1s linear infinite;
+  font-family: 'Hurricane', cursive;
+  font-family: 'Rubik Wet Paint', cursive;
+  color: rgb(185, 5, 41);
+  font-size: 30px;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
 
 html { 
 background: url(../images/backyard.jpg) no-repeat center center fixed; 
