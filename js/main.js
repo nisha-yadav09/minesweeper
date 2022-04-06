@@ -61,6 +61,7 @@ document.querySelector("select").addEventListener('change', function() {
     minesCountToDisplayEl.textContent = mineChoice;
     init();
 });
+
 document.querySelector("#table-div").addEventListener("click", handleCellClick);
 document.querySelector("#table-div").addEventListener("contextmenu", handleCellRightClick);
 
