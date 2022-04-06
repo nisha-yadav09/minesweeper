@@ -2,6 +2,18 @@ body {
     height: 100vh;
 }
 
+#main-div {
+  text-align: center;
+  padding-top: 20px ;
+  padding-bottom: 40px ;
+}
+
+#play-button {
+  text-align: center;
+  padding-top: 20px ;
+  padding-bottom: 40px ;
+}
+
 .buttonimage {
   width: 30px;
   height: 30px;
@@ -20,7 +32,7 @@ body {
 } 
 
 .button {
-  background-color: #4CAF50; /* Green */
+  background-color: #4CAF50;
   border: none;
   color: white;
   box-shadow: 0px 0px 15px #90fa8773;
@@ -55,8 +67,8 @@ td {
   background-color: #4CAF50;
   box-shadow: 0px 0px 15px #90fa8773;
   color: white;
-  width: fit-content;
-  block-size: fit-content;
+  height: 40px;
+  text-align: center;
   font-size: 15px;
   cursor: pointer;
   font-weight: bold;

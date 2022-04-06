@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hurricane&family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
@@ -13,17 +14,16 @@
 </head>
 <body>
     <h2>Minesweeper</h2>
-       <div>
-        <select class="dropbtn">
-            <option value="Beginner" >Difficulty</option>
-            <option value="Beginner" >Beginner</option>
-            <option value="Intermediate" >Intermediate</option>
-            <option value="Expert">Expert</option>
-        </select>
-        </div>
-        <div data-modal-target="#modal"> 
+    <div id="main-div">
+    <select class="dropbtn">
+        <option value="Beginner" >Difficulty</option>
+        <option value="Beginner" >Beginner</option>
+        <option value="Intermediate" >Intermediate</option>
+        <option value="Expert">Expert</option>
+    </select>
+    </div>
+        <div data-modal-target="#modal" id="play-button"> 
         <button class="button">Play</button>
-        <!-- <button data-close-button class="close-button">&times;</button> -->
     </div>
     <div class="modal" id="modal">
         <div class="container">

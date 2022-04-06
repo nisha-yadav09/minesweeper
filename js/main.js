@@ -2,25 +2,25 @@
 
 const boardSize = {
     Beginner: 8, 
-    Intermediate: 16,
-    Expert: 24
+    Intermediate: 12,
+    Expert: 18
 };
 
 const mines = {
     Beginner : 10, 
-    Intermediate: 40,
-    Expert:99
+    Intermediate: 35,
+    Expert:60
 };
 
 /*----- app's state (variables) -----*/
 
-let arrBoard ;
+let arrBoard;
 let flagCount = null;
 let boardChoice =  0;
 let mineChoice =  0;
 let gameStatus = 0;
 let startTime;
-let intervalID;
+let intervalId;
 
 /*----- cached element references -----*/
 
@@ -69,16 +69,10 @@ document.querySelector("#table-div").addEventListener("contextmenu", handleCellR
 //init();
 
 function init() {
-
     setStartTime();
-
-    intervalID = setInterval(function () {
-        
-                        counterToDisplay.textContent = getElapsedTime(startTime).toString();
-                    }, 1000);
-
-    
-
+    intervalId = setInterval(function () {
+        counterToDisplay.textContent = getElapsedTime(startTime).toString();
+    }, 1000);
     createBoard(boardChoice);
     createArray(boardChoice);
     fillBoardWithRandomMines(boardChoice);
@@ -343,5 +337,5 @@ function getElapsedTime (startTime) {
 }
 
 function stopWatch() {
-    clearInterval(intervalID);
+    clearInterval(intervalId);
 }
