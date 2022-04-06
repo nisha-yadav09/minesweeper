@@ -1,0 +1,97 @@
+/*----- constants -----*/
+const boardSize = [{beginner :8}, {intermediate: 16},{expert:24}];
+const mines = [{beginner :10}, {intermediate: 40},{expert:99}];
+
+
+
+
+
+/*----- app's state (variables) -----*/
+
+const arrBeginner = [
+[{""},{""}],
+[],
+];
+
+const arrIntermediate = [
+[{""},{""}],
+[],
+];
+
+const arrExpert = [
+[{""},{""}],
+[],
+];
+
+let gameStatus;  // 'W' -> Win; 'L' -> Loss; null -> game in progress
+const 
+
+/*----- cached element references -----*/
+/*----- event listeners -----*/
+/*----- functions -----*/
+
+init();
+
+
+------------------------------------------------------------------------------------
+
+Psuedo-Code
+
+
+1. Define the constants:
+
+const boardSize = [{beginner :8}, {intermediate: 16},{expert:24}];
+const mines = [{beginner :10}, {intermediate: 40},{expert:99}];
+
+2. Define app state variables:
+const arrBeginner = [
+[{""},{""}],
+[],
+];
+
+const arrIntermediate = [
+[{""},{""}],
+[],
+];
+
+const arrExpert = [
+[{""},{""}],
+[],
+];
+let gameStatus;
+
+3. cached elements --> cells of the boxes, flagCount, timer
+4. Render board based on difficulty (main js)
+5. Create/invoke random method to place the mines. (main js)
+6. Update the state array board variable to access the placed mines.(object with mine property true, reveal property false, value property 0) -->
+7. Create a function and invoke it to calculate the number of mines in nearby 8 cells (main js)
+8. Update the state array variable with the above calculated numbers (object with mine property false, reveal property true value property number)
+9. Update the state array variable with "" if there are no nearby 8 cells. (object with mine property false, reveal property false, value property -1)
+
+[Call Cell class with the array to create those many objects]
+10. Create a function to handle [in Cell Class] --> 
+     if clicked on mine cell --> terminate by revealing all the cells with mines (update game status - L)
+     if clicked on "" cell --> reveal all the cell till it encounters a number cell (update game status - null)
+     if clicked on number cell --> reveal it only (update game status - null)
+	has bombs
+	has flags
+	......	
+11. Create a function to start timer on first cell click. (main js)
+12. Create a function for end timer --> on mine cell click / game status is L or W (main js)
+
+11. Winning logic if only those cells are left un-revealed that has mine. / game status W
+
+
+class of Cell --> 
+
+
+Think about array classes.
+
+Think about local storage of time and player maybe
+
+
+
+
+
+
+
