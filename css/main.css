@@ -113,31 +113,6 @@ img {
 .modal.active {
   transform: translate(-50%, -50%) scale(1);
 }
-
-.modal-header {
-  padding: 10px 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-    
-.modal-header .title {
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-    
-.modal-header .close-button {
-  cursor: pointer;
-  border: none;
-  outline: none;
-  background: none;
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-    
-.modal-body {
-  padding: 10px 15px;
-}
     
 #overlay {
   position: fixed;
@@ -182,5 +157,4 @@ background: url(../images/backyard.jpg) no-repeat center center fixed;
 -moz-background-size: cover;
 -o-background-size: cover;
 background-size: cover;
-
 } 

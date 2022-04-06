@@ -15,40 +15,40 @@ const mines = {
 /*----- app's state (variables) -----*/
 
 let arrBoard;
-let flagCount = null;
-let boardChoice =  0;
-let mineChoice =  0;
-let gameStatus = 0;
+let flagCount;
+let boardChoice;
+let mineChoice;
+let gameStatus;
 let startTime;
 let intervalId;
 
 /*----- cached element references -----*/
 
-const openModalButtons = document.querySelectorAll('[data-modal-target]');
-const closeModalButtons = document.querySelectorAll('[data-close-button]');
-const overlay = document.getElementById('overlay');
-const boardSelected = document.querySelector("select");
-const minesCountToDisplay = document.querySelector(".container > div#mines-div > span");
-const counterToDisplay = document.querySelector(".container > div#counter-div > span");
+const overlayEl = document.getElementById('overlay');
+const boardSelectedEl = document.querySelector("select");
+const minesCountToDisplayEl = document.querySelector(".container > div#mines-div > span");
+const counterToDisplayEl = document.querySelector(".container > div#counter-div > span");
+const openModalButtonsEl = document.querySelectorAll('[data-modal-target]');
+const closeModalButtonsEl = document.querySelectorAll('[data-close-button]');
 
 /*----- event listeners -----*/
 
-openModalButtons.forEach(button => {
-    button.addEventListener('click', () => {
+openModalButtonsEl.forEach(function(button) {
+    button.addEventListener('click', function() {
       const modal = document.querySelector(button.dataset.modalTarget)
       openModal(modal)
     });
   });
 
-  overlay.addEventListener('click', () => {
+  overlayEl.addEventListener('click', function() {
     const modals = document.querySelectorAll('.modal.active')
     modals.forEach(modal => {
       closeModal(modal)
     });
   });
   
-  closeModalButtons.forEach(button => {
-    button.addEventListener('click', () => {
+  closeModalButtonsEl.forEach(function(button) {
+    button.addEventListener('click', function() {
       const modal = button.closest('.modal')
       closeModal(modal)
     });
@@ -58,7 +58,7 @@ document.querySelector("select").addEventListener('change', function() {
     let val = document.querySelector("select").value
     boardChoice =  boardSize[val];
     mineChoice =  mines[val];
-    minesCountToDisplay.textContent = mineChoice;
+    minesCountToDisplayEl.textContent = mineChoice;
     init();
 });
 document.querySelector("#table-div").addEventListener("click", handleCellClick);
@@ -66,18 +66,18 @@ document.querySelector("#table-div").addEventListener("contextmenu", handleCellR
 
 /*----- functions -----*/
 
-//init();
-
 function init() {
     setStartTime();
-    intervalId = setInterval(function () {
-        counterToDisplay.textContent = getElapsedTime(startTime).toString();
+    intervalId = setInterval(function() {
+        counterToDisplayEl.textContent = getElapsedTime(startTime).toString();
     }, 1000);
     createBoard(boardChoice);
     createArray(boardChoice);
     fillBoardWithRandomMines(boardChoice);
     fillBoardWithNumbers(); 
 }
+
+/*----- create dynamic board for UI based on the difficulty level selected -----*/
 
 function createBoard(boardChoice) {
     let boardRootEl = document.querySelector("div#table-div");
@@ -89,17 +89,22 @@ function createBoard(boardChoice) {
         for (let j = 0; j < parseInt(boardChoice); j++) { 
             let td = document.createElement('td');
             tr.appendChild(td);
-            td.setAttribute("x-index" , i);
-            td.setAttribute("y-index" , j);
+            td.setAttribute("x-index" , i); //set attribute to map with array
+            td.setAttribute("y-index" , j); //set attribute to map with array
         }
     }  
 }
+
+/*----- function to return random x and y indexes to place the mines -----*/
 
 function getRandomMinesIndex(boardChoice, idx) {
     const rndXIdx = Math.floor(Math.random() * (boardChoice-1));
     const rndYIdx = Math.floor(Math.random() * (boardChoice-1));
     return idx === 'x' ? rndXIdx : rndYIdx;
 }
+
+/*----- create 2D array of objects to map with the board all th eproperties to be set as null initially -----*/
+/*----- TODO : This can be moved to Class (board with cell objects) -----*/
 
 function createArray(boardChoice) {
     arrBoard = new Array(boardChoice);
@@ -117,6 +122,8 @@ function createArray(boardChoice) {
     }
 }
 
+/*----- function to fill array with mines at random places -----*/
+
 function fillBoardWithRandomMines(boardChoice) {
     let tempMineChoice = mineChoice;
     do {
@@ -128,6 +135,8 @@ function fillBoardWithRandomMines(boardChoice) {
         initVal === "mine" ? tempMineChoice ++ : tempMineChoice;
     } while (tempMineChoice>=1);
 }
+
+/*----- event listner callback function to handle Cell click -----*/
 
 function handleCellClick(evt) {
     if (evt.target.tagName !== 'TD') return;
@@ -141,11 +150,9 @@ function handleCellClick(evt) {
         evt.target.innerHTML = arrBoard[cellXIndex][cellYIndex].value;
         evt.target.style.backgroundColor = "#bfc7a4";
         arrBoard[cellXIndex][cellYIndex].reveal = true;
-
     } 
     if (arrBoard[cellXIndex][cellYIndex].value === 0 ) showAllVacantCells(evt,cellXIndex,cellYIndex);
     mineSweeperStatus();
-
 }
 
 function handleCellRightClick(evt) {
@@ -156,6 +163,8 @@ function handleCellRightClick(evt) {
     arrBoard[cellXIndex][cellYIndex].hasFlag = true;
     evt.target.innerHTML="<img src='images/flag.png'/>";
 }
+
+/*----- function to fill the array with -----*/
 
 function fillBoardWithNumbers() {
     let counter = 0;
@@ -187,6 +196,8 @@ function fillBoardWithNumbers() {
         }
     }
 }
+
+/*----- function to handle if a cell with zero mines is clicked positive indexes-----*/
 
 function showAllVacantCells(evt,cellXIndex,cellYIndex) {
     let iNum = 0;
@@ -230,6 +241,8 @@ function showAllVacantCells(evt,cellXIndex,cellYIndex) {
     
 }
 
+/*----- function to handle if a cell with zero mines is clicked negative indexes-----*/
+
 function showAllVacantCellsNegativeIndex(evt,cellXIndex,cellYIndex) {
     let iNum = 0;
     let jNum = 0;
@@ -261,18 +274,24 @@ function showAllVacantCellsNegativeIndex(evt,cellXIndex,cellYIndex) {
     }
 }
 
+/*----- function to set the class of modal to active-----*/
+
 function openModal(modal) {
     if (modal == null) return
     modal.classList.add('active');
-    overlay.classList.add('active');
+    overlayEl.classList.add('active');
 }
-  
+
+/*----- function to remove the class of modal from active-----*/
+
 function closeModal(modal) {
     if (modal == null) return
     modal.classList.remove('active');
-    overlay.classList.remove('active');
+    overlayEl.classList.remove('active');
     window.location.reload();
 }
+
+/*----- function to reveal all the mines if a cell with mine is clicked-----*/
 
 function revealAllMines () {
     for (let i = 0; i < arrBoard.length; i++) {
@@ -286,6 +305,8 @@ function revealAllMines () {
     }
     gameStatus = -1;
 }
+
+/*----- function to handle game status-----*/
 
 function mineSweeperStatus() {
     if (gameStatus === -1) {
@@ -310,9 +331,13 @@ function mineSweeperStatus() {
     }  
 }
 
+/*----- function to get the start time of game-----*/
+
 function setStartTime() {
     startTime = new Date();
 }
+
+/*----- function to get elapsed time of game-----*/
 
 function getElapsedTime (startTime) {
     let endTime = new Date();
@@ -335,6 +360,8 @@ function getElapsedTime (startTime) {
         return totalHoursAsString + ":" + minutesAsString + ":" + secondsAsString;
     }
 }
+
+/*----- function to clear the set interval id if game is lost or won-----*/
 
 function stopWatch() {
     clearInterval(intervalId);
