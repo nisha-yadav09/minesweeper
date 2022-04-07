@@ -24,6 +24,7 @@ let intervalId;
 
 /*----- cached element references -----*/
 
+const tableEl = document.querySelector("#table-div");
 const overlayEl = document.getElementById('overlay');
 const boardSelectedEl = document.querySelector("select");
 const minesCountToDisplayEl = document.querySelector(".container > div#mines-div > span");
@@ -33,37 +34,35 @@ const closeModalButtonsEl = document.querySelectorAll('[data-close-button]');
 
 /*----- event listeners -----*/
 
+tableEl.addEventListener("click", handleCellClick);
+tableEl.addEventListener("contextmenu", handleCellRightClick);
+
 openModalButtonsEl.forEach(function(button) {
     button.addEventListener('click', function() {
-      const modal = document.querySelector(button.dataset.modalTarget)
-      openModal(modal)
+      const modal = document.querySelector(button.dataset.modalTarget);
+      openModal(modal);
     });
   });
 
-  overlayEl.addEventListener('click', function() {
-    const modals = document.querySelectorAll('.modal.active')
-    modals.forEach(modal => {
-      closeModal(modal)
-    });
-  });
+overlayEl.addEventListener('click', function() {
+    const modal = document.querySelector('.modal.active');
+    closeModal(modal);
+});
   
-  closeModalButtonsEl.forEach(function(button) {
-    button.addEventListener('click', function() {
-      const modal = button.closest('.modal')
-      closeModal(modal)
-    });
-  });
+closeModalButtonsEl.forEach(function(button) {
+button.addEventListener('click', function() {
+    const modal = button.closest('.modal');
+    closeModal(modal);
+});
+});
 
 document.querySelector("select").addEventListener('change', function() {
-    let val = document.querySelector("select").value
+    let val = document.querySelector("select").value;
     boardChoice =  boardSize[val];
     mineChoice =  mines[val];
     minesCountToDisplayEl.textContent = mineChoice;
     init();
 });
-
-document.querySelector("#table-div").addEventListener("click", handleCellClick);
-document.querySelector("#table-div").addEventListener("contextmenu", handleCellRightClick);
 
 /*----- functions -----*/
 
@@ -162,7 +161,8 @@ function handleCellRightClick(evt) {
     let cellXIndex = parseInt(evt.target.getAttribute("x-index"));
     let cellYIndex = parseInt(evt.target.getAttribute("y-index"));
     arrBoard[cellXIndex][cellYIndex].hasFlag = true;
-    evt.target.innerHTML="<img src='images/flag.png'/>";
+    evt.target.innerHTML="<img src='images/flagged.png'/>";
+    arrBoard[cellXIndex][cellYIndex].hasFlag = true;
 }
 
 /*----- function to fill the array with -----*/
@@ -186,9 +186,7 @@ function fillBoardWithNumbers() {
                 yUpperLimit = yUpperLimit > arrBoard.length-1  ? arrBoard.length-1  : yUpperLimit;
                 for (let itrI = xLowerLimit; itrI <= xUpperLimit; itrI++) {
                     for (let itrJ = yLowerLimit; itrJ <= yUpperLimit; itrJ++) {
-                        if (arrBoard[itrI][itrJ].value === "mine") {
-                            counter++;
-                        }
+                        if (arrBoard[itrI][itrJ].value === "mine") counter++;
                     }
                 }
                 arrBoard[i][j].value = arrBoard[i][j].value === "mine" ?"mine" : counter;
@@ -196,6 +194,44 @@ function fillBoardWithNumbers() {
             }
         }
     }
+}
+
+/*----- function to reveal all the mines if a cell with mine is clicked-----*/
+
+function revealAllMines() {
+    arrBoard.forEach(function(row, i) {
+        row.forEach(function(col, j) {
+            if (col.value === "mine") {
+                document.querySelector(`table [x-index = "${i}"][y-index = "${j}"]`).innerHTML = "<img src='images/mines.png'/>";
+                tableEl.classList.add("activate");
+                col.reveal = true;
+            }
+        });
+    });
+    gameStatus = -1;
+}
+
+/*----- function to handle game status-----*/
+
+function mineSweeperStatus() {
+    if (gameStatus === -1) {
+        stopWatch();
+        document.querySelector('#status-div').innerHTML = "TRY AGAIN!!";
+        tableEl.style.pointerEvents = "none";
+    }
+    let revealedMineCounter = 0;
+    let nonMineCounter = (arrBoard.length*arrBoard.length) - mineChoice;
+    arrBoard.forEach(function(row) {
+        row.forEach(function(col) {
+            if (col.value !== "mine" && col.reveal === true) revealedMineCounter++;
+        });
+    });
+    revealedMineCounter === nonMineCounter ? gameStatus = 1 : gameStatus = 0;
+    if (gameStatus === 1) {
+        stopWatch();
+        document.querySelector('#status-div').innerHTML = "BRAVO! YOU WIN!!";
+        tableEl.style.pointerEvents = "none";
+    }  
 }
 
 /*----- function to handle if a cell with zero mines is clicked positive indexes-----*/
@@ -235,11 +271,10 @@ function showAllVacantCells(evt,cellXIndex,cellYIndex) {
         }
     }
     showAllVacantCellsNegativeIndex(evt,cellXIndex,cellYIndex);
-    document.querySelector("#table-div").classList.add("activate");
+    tableEl.classList.add("activate");
     setTimeout(function() {
-        document.querySelector("#table-div").classList.remove("activate");
-    }, 1200);
-    
+        tableEl.classList.remove("activate");
+    }, 1200);   
 }
 
 /*----- function to handle if a cell with zero mines is clicked negative indexes-----*/
@@ -292,46 +327,6 @@ function closeModal(modal) {
     window.location.reload();
 }
 
-/*----- function to reveal all the mines if a cell with mine is clicked-----*/
-
-function revealAllMines () {
-    for (let i = 0; i < arrBoard.length; i++) {
-        for (let j = 0; j < arrBoard.length; j++) {
-            if (arrBoard[i][j].value === "mine") {
-                document.querySelector(`table [x-index = "${i}"][y-index = "${j}"]`).innerHTML = "<img src='images/mines.png'/>";
-                document.querySelector("#table-div").classList.add("activate");
-                arrBoard[i][j].reveal = true;
-            }
-        }
-    }
-    gameStatus = -1;
-}
-
-/*----- function to handle game status-----*/
-
-function mineSweeperStatus() {
-    if (gameStatus === -1) {
-        stopWatch();
-        document.querySelector('#status-div').innerHTML = "TRY AGAIN!!";
-        document.querySelector("#table-div").style.pointerEvents = "none";
-    }
-    let revealedMineCounter = 0;
-    let nonMineCounter = (arrBoard.length*arrBoard.length) - mineChoice;
-    for (let i = 0; i < arrBoard.length; i++) {
-        for (let j = 0; j < arrBoard.length; j++) {
-            if (arrBoard[i][j].value !== "mine" && arrBoard[i][j].reveal === true) {
-                revealedMineCounter++;
-            }
-        }
-    }
-    revealedMineCounter === nonMineCounter ? gameStatus = 1 : gameStatus = 0;
-    if (gameStatus === 1) {
-        stopWatch();
-        document.querySelector('#status-div').innerHTML = "BRAVO! YOU WIN!!";
-        document.querySelector("#table-div").style.pointerEvents = "none";
-    }  
-}
-
 /*----- function to get the start time of game-----*/
 
 function setStartTime() {
@@ -342,6 +337,7 @@ function setStartTime() {
 
 function getElapsedTime (startTime) {
     let endTime = new Date();
+    let returnVal = ""
     let timeDiff = endTime.getTime() - startTime.getTime();
     timeDiff = timeDiff / 1000;
     let seconds = Math.floor(timeDiff % 60);
@@ -355,11 +351,8 @@ function getElapsedTime (startTime) {
     let days = timeDiff;
     let totalHours = hours + (days * 24);
     let totalHoursAsString = totalHours < 10 ? "0" + totalHours : totalHours + "";
-    if (totalHoursAsString === "00") {
-        return minutesAsString + ":" + secondsAsString;
-    } else {
-        return totalHoursAsString + ":" + minutesAsString + ":" + secondsAsString;
-    }
+    returnVal = totalHoursAsString === "00" ? minutesAsString + ":" + secondsAsString : totalHoursAsString + ":" + minutesAsString + ":" + secondsAsString;
+    return returnVal;
 }
 
 /*----- function to clear the set interval id if game is lost or won-----*/
